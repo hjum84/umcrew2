@@ -25,7 +25,7 @@ def chat():
     # GPT 모델을 사용해 질문에 응답
     try:
         response = openai.Completion.create(
-            model="text-davinci-003",
+            model="gpt-3.5-turbo",
             prompt=user_message,
             max_tokens=150
         )
