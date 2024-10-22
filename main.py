@@ -1,6 +1,6 @@
+import os
 from flask import Flask, request, jsonify, render_template
 import openai
-import os
 from dotenv import load_dotenv
 
 # .env 파일에서 환경 변수 로드
@@ -22,10 +22,10 @@ def chat():
     if not user_message:
         return jsonify({"error": "질문이 필요합니다."}), 400
 
-    # GPT-4를 사용해 질문에 응답
+    # GPT 모델을 사용해 질문에 응답
     try:
         response = openai.Completion.create(
-            model="gpt-3.5-turbo",
+            model="text-davinci-003",
             prompt=user_message,
             max_tokens=150
         )
@@ -35,4 +35,6 @@ def chat():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    # Render가 제공하는 포트에서 실행
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
