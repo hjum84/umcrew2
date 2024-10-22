@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT 챗봇</title>
+</head>
+<body>
+    <h1>GPT 챗봇에 오신 것을 환영합니다!</h1>
+    <textarea id="userInput" rows="4" cols="50" placeholder="질문을 입력하세요..."></textarea><br>
+    <button onclick="sendMessage()">보내기</button>
+    <p><strong>챗봇 답변:</strong></p>
+    <p id="chatbotReply"></p>
+
+    <script>
+        async function sendMessage() {
+            const userMessage = document.getElementById('userInput').value;
+
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: userMessage }),
+            });
+
+            const data = await response.json();
+            if (data.reply) {
+                document.getElementById('chatbotReply').innerText = data.reply;
+            } else {
+                document.getElementById('chatbotReply').innerText = 'Error: ' + data.error;
+            }
+        }
+    </script>
+</body>
+</html>
