@@ -1,6 +1,6 @@
-import os
 from flask import Flask, request, jsonify, render_template
 import openai
+import os
 from dotenv import load_dotenv
 
 # .env 파일에서 환경 변수 로드
@@ -22,14 +22,17 @@ def chat():
     if not user_message:
         return jsonify({"error": "질문이 필요합니다."}), 400
 
-    # GPT 모델을 사용해 질문에 응답
+    # GPT-3.5-turbo를 사용해 질문에 응답
     try:
-        response = openai.Completion.create(
+        response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            prompt=user_message,
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": user_message}
+            ],
             max_tokens=150
         )
-        chatbot_reply = response['choices'][0]['text'].strip()
+        chatbot_reply = response['choices'][0]['message']['content'].strip()
         return jsonify({"reply": chatbot_reply})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
